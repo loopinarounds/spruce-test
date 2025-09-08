@@ -1,25 +1,24 @@
 import React, { useEffect, useState } from "react";
 import { privateApiRequest } from "../api";
-import { LeaderboardEntry } from "../types";
+import { GameState, LeaderboardEntry } from "../types";
 import Loading from "./Loading";
-import { useGame } from "../hooks/useGame";
 
-export function Leaderboard() {
+export function Leaderboard({gameState}:{gameState: GameState}): JSX.Element {
 
-
-const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
 const [leaderboardData, setLeaderboardData] = useState<LeaderboardEntry[]>([]);
+
 
 
 
 
 useEffect(() => {
   const getLeaderboardData = async () => {
+    if(gameState !== GameState.InProgress) return;
     setLoading(true);
 
     const response = await privateApiRequest<LeaderboardEntry[]>(`/leaderboard`);
 
-    console.log(response)
 
     if(response.length === 0) {
       setLeaderboardData([]);
@@ -32,15 +31,14 @@ useEffect(() => {
   };
 
   getLeaderboardData();
-}, []);
+}, [gameState]);
 
 
-console.log(loading, leaderboardData)
+
 
 if (loading) {
   return <Loading />;
 }
-
 
   return (
     <div className="w-1/4 bg-gray-100 p-4 border-r border-gray-300">

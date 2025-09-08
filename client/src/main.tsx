@@ -1,22 +1,64 @@
-import React, { useState } from 'react'
-import { XorO } from './types'
 
+import React, {  useState } from "react";
+import {GameBoard} from "./components/GameBoard";
+
+
+import { Setup } from "./components/Setup";
+import { Board, GameState, XorO } from "./types";
 
 export const Main = () => {
-  const [board, setBoard] = useState<(XorO | undefined)[][]>([
+  const [currentPlayer, setCurrentPlayer] = useState<XorO>("O");
+  const [board, setBoard] = useState<Board>([
     [undefined, undefined, undefined],
     [undefined, undefined, undefined],
-    [undefined, undefined, undefined]
-  ])
+    [undefined, undefined, undefined],
+  ]);
+  const [gameState, setGameState] = useState<GameState>(
+    GameState.InProgress
+  );
+  const [boardSize, setBoardSize] = useState<number>(3);
 
-  return <div className='flex flex-col mt-10 items-center gap-10'>
-    <div className='font-bold text-2xl'>Tic Tac Toe</div>
-    <div className='flex flex-col gap-1'>
-      {board.map(row => <div className='flex gap-1'>
-        {row.map(column => <div className='border-2 border-gray-900 w-10 h-10 cursor-pointer items-center justify-center text-2xl font-bold flex'>
-          {column}
-        </div>)}
-      </div>)}
-    </div>
-  </div>
-}
+
+
+  
+
+  const resetGame = (): void => {
+    setBoard(
+      Array(boardSize)
+        .fill(undefined)
+        .map(() => Array(boardSize).fill(undefined))
+    );
+    setGameState(GameState.InProgress);
+  };
+
+  return (
+    <>
+      <div className="flex flex-col mt-10 items-center gap-10">
+        <h1
+          className="
+            text-4xl sm:text-5xl font-bold tracking-wide
+            text-slate-800 dark:text-slate-200
+          "
+        >
+          Tic Tac Toe
+        </h1>
+
+        <div className="font-bold text-l">Current Player: {currentPlayer}</div>
+        
+        <GameBoard
+          board={board}
+          updateBoard={setBoard}
+          currentPlayer={currentPlayer}
+          setCurrentPlayer={setCurrentPlayer}
+          gameState={gameState}
+        />
+        <Setup
+          boardSize={boardSize}
+          setBoardSize={setBoardSize}
+          resetGame={resetGame}
+        />
+      </div>
+      
+    </>
+  );
+};

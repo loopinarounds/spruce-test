@@ -19,26 +19,39 @@ const dbPromise = open({
 (async () => {
   const db = await dbPromise;
   await db.exec(`
-    CREATE TABLE IF NOT EXISTS winners (
-      uuid TEXT PRIMARY KEY,
+    CREATE TABLE IF NOT EXISTS games (
+      id TEXT PRIMARY KEY,
       name_of_winner TEXT NOT NULL
     );
   `);
 })();
 
 
-app.use(cors({ credentials: true, origin: "http://localhost:3001" }));
+const allowedOrigins = ["http://localhost:3001", "http://192.168.1.204:3001"];
+
+app.use(
+  cors({
+    origin: (ctx) => {
+      const requestOrigin = ctx.request.header.origin;
+      if (requestOrigin && allowedOrigins.includes(requestOrigin)) {
+        return requestOrigin; 
+      }
+      return "http://localhost:3001"; 
+    },
+    credentials: true,
+  })
+);
 app.use(bodyParser());
 
 
 
 
-router.post("/create-game", async (ctx) => {
+router.post("/api/create-game", async (ctx) => {
  const { name_of_winner } = ctx.request.body as {
   name_of_winner: string
  };
 
-  if (!name_of_winner) {
+  if (!name_of_winner || name_of_winner.trim() === "") {
     ctx.status = 400;
     ctx.body = { error: "Winner name is required" };
     return;
@@ -49,7 +62,7 @@ router.post("/create-game", async (ctx) => {
   const db = await dbPromise;
   try {
     await db.run(
-      "INSERT INTO winners (id, name_of_winner) VALUES (?, ?)",
+      "INSERT INTO games (id, name_of_winner) VALUES (?, ?)",
       id,
       name_of_winner
     );
@@ -61,16 +74,16 @@ router.post("/create-game", async (ctx) => {
   }
 });
 
-router.get("/winners", async (ctx) => {
+router.get("/api/leaderboard", async (ctx) => {
   const db = await dbPromise;
   try {
-    const winners = await db.all(`
-      SELECT name_of_winner AS name, COUNT(*) AS count
-      FROM winners
+    const games = await db.all(`
+      SELECT name_of_winner , COUNT(*) AS count
+      FROM games
       GROUP BY name_of_winner
       ORDER BY count DESC;
     `);
-    ctx.body = winners;
+    ctx.body = games;
   } catch (error) {
     ctx.status = 500;
     ctx.body = { error: "Failed to retrieve winners count" };
@@ -79,6 +92,8 @@ router.get("/winners", async (ctx) => {
 
 
 app.use(router.routes()).use(router.allowedMethods());
+
+console.log(router)
 
 
 app.listen(3000, () => {

@@ -9,4 +9,8 @@ export enum GameState {
     InProgress = "in_progress",
     }
 
+export type LeaderboardEntry = {
+    name: string,
+    count: number,
+}
     

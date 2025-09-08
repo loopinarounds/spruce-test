@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { GameState } from "../types";
+import { privateApiRequest } from "../api";
 
 type WinnerModalProps = {
   gameState: GameState
@@ -11,8 +12,17 @@ export function WinnerModal({
   onClose,
 }: WinnerModalProps): JSX.Element{
   const [playerName, setPlayerName] = useState(""); 
+
+
+  const saveGame = ()=> privateApiRequest<void>(`/create-game`, {
+    method: "POST",
+    body: {
+      name_of_winner: playerName
+    }
+  });
   
-  const handleSave = () => {
+  const handleSave = async () => {
+    await saveGame()
     onClose();
   };
 

@@ -27,7 +27,7 @@ const dbPromise = open({
 })();
 
 
-const allowedOrigins = ["http://localhost:3001", "http://192.168.1.204:3001"];
+const allowedOrigins = ["localhost:3001"];
 
 app.use(
   cors({
@@ -78,7 +78,7 @@ router.get("/api/leaderboard", async (ctx) => {
   const db = await dbPromise;
   try {
     const games = await db.all(`
-      SELECT name_of_winner , COUNT(*) AS count
+      SELECT name_of_winner AS name, COUNT(*) AS count
       FROM games
       GROUP BY name_of_winner
       ORDER BY count DESC;

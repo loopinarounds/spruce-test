@@ -14,8 +14,8 @@ export function useGame() {
 
   const resetGame = () => {
     setBoard(getEmptyBoard(boardSize));
-    setCurrentPlayer("O");
     setGameState(GameState.InProgress);
+    setCurrentPlayer("O");
   };
 
   const checkWinner = (updatedBoard: Board) => {
@@ -48,14 +48,13 @@ export function useGame() {
       return;
     }
   
-    // Check for a draw
     const isDraw = updatedBoard.every((row) => row.every((cell) => cell !== undefined));
     if (isDraw) {
       setGameState(GameState.Draw);
     }
   };
 
-  
+
   const onCellClick = (position: [number, number]) => {
     const [i, j] = position;
     if (board[j][i] !== undefined || gameState !== GameState.InProgress) {

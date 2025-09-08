@@ -25,7 +25,7 @@ export function Cell({
       onClick={() => onCellClick(position)}
     >
       <div className="w-full flex items-center justify-center">
-          <span className={`text-[70cqw] ${!value && gameState === GameState.InProgress && 'opacity-0 group-hover:opacity-30 transition-opacity duration-200'}`}>{value ?? currentTurn}</span>
+          <span className={'text-[70cqw]'}>{value}</span>
       </div>
     </div>
   );

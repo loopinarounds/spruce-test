@@ -49,7 +49,7 @@ if (loading) {
       <ul>
         {leaderboardData.map((entry, index) => (
           <li key={index} className="flex justify-between mb-2">
-            <span>{entry.name}</span>
+            <span>{entry.name_of_winner}</span>
             <span>{entry.count}</span>
           </li>
         ))}

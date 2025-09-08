@@ -10,7 +10,7 @@ export enum GameState {
     }
 
 export type LeaderboardEntry = {
-    name: string,
+    name_of_winner: string,
     count: number,
 }
     

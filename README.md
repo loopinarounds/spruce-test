@@ -22,3 +22,6 @@ I went for a very simple Arcade game leaderboard approach for the challenge. Upo
 - `cd server`
 - `npm i`
 - `npm start`
+
+
+`localhost:3001`

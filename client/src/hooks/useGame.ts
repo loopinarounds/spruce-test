@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Board, GameState, XorO } from "../types";
+import { checkAntiDiagonalWin, checkDiagonalWin, checkDraw, checkHorizontalWin, checkVerticalWin } from "../../utils/checkWinners";
 
 const getEmptyBoard = (size: number): Board =>
   Array(size)
@@ -19,41 +20,21 @@ export function useGame() {
   };
 
   const checkWinner = (updatedBoard: Board) => {
-    const boardSize = updatedBoard.length;
+    if (
+      checkHorizontalWin(updatedBoard, currentPlayer) ||
+      checkVerticalWin(updatedBoard, currentPlayer) ||
+      checkDiagonalWin(updatedBoard, currentPlayer) ||
+      checkAntiDiagonalWin(updatedBoard, currentPlayer)
+    ) {
+      setGameState(currentPlayer === "X" ? GameState.XWinner : GameState.OWinner);
+      return;
+    }
 
-    console.log("Checking winner for board:" ,updatedBoard);
-  
-    for (let i = 0; i < boardSize; i++) {
-      if (updatedBoard[i].every((cell) => cell === currentPlayer)) {
-      
-        setGameState(currentPlayer === "X" ? GameState.XWinner : GameState.OWinner);
-        return;
-      }
-    }
-  
-    for (let i = 0; i < boardSize; i++) {
-      if (updatedBoard.every((row) => row[i] === currentPlayer)) {
-        setGameState(currentPlayer === "X" ? GameState.XWinner : GameState.OWinner);
-        return;
-      }
-    }
-  
-    if (updatedBoard.every((row, idx) => row[idx] === currentPlayer)) {
-      setGameState(currentPlayer === "X" ? GameState.XWinner : GameState.OWinner);
-      return;
-    }
-  
-    if (updatedBoard.every((row, idx) => row[boardSize - idx - 1] === currentPlayer)) {
-      setGameState(currentPlayer === "X" ? GameState.XWinner : GameState.OWinner);
-      return;
-    }
-  
-    const isDraw = updatedBoard.every((row) => row.every((cell) => cell !== undefined));
-    if (isDraw) {
+    // Check for a draw
+    if (checkDraw(updatedBoard)) {
       setGameState(GameState.Draw);
     }
   };
-
 
   const onCellClick = (position: [number, number]) => {
     const [i, j] = position;
@@ -79,5 +60,6 @@ export function useGame() {
     gameState,
     resetGame,
     onCellClick,
+    setBoard, // Exposed for testing purposes
   };
 }

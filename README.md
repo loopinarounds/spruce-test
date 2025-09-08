@@ -7,7 +7,7 @@
 - `npm i`
 - `npm start`
 
-- In a second termina;
+- In a second terminal
 - `cd server`
 - `npm i`
 - `npm start`

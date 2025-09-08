@@ -1,64 +1,38 @@
-
-import React, {  useState } from "react";
-import {GameBoard} from "./components/GameBoard";
-
-
-import { Setup } from "./components/Setup";
-import { Board, GameState, XorO } from "./types";
+import React from "react";
+import { useGame } from "./hooks/useGame";
+import { GameBoard } from "./components/GameBoard";
+import { SetupGame } from "./components/Setup";
 
 export const Main = () => {
-  const [currentPlayer, setCurrentPlayer] = useState<XorO>("O");
-  const [board, setBoard] = useState<Board>([
-    [undefined, undefined, undefined],
-    [undefined, undefined, undefined],
-    [undefined, undefined, undefined],
-  ]);
-  const [gameState, setGameState] = useState<GameState>(
-    GameState.InProgress
-  );
-  const [boardSize, setBoardSize] = useState<number>(3);
 
-
-
-  
-
-  const resetGame = (): void => {
-    setBoard(
-      Array(boardSize)
-        .fill(undefined)
-        .map(() => Array(boardSize).fill(undefined))
-    );
-    setGameState(GameState.InProgress);
-  };
+  const {
+    board,
+    currentPlayer,
+    gameState,
+    boardSize,
+    setBoardSize,
+    resetGame,
+    onCellClick,
+  } = useGame();
 
   return (
-    <>
-      <div className="flex flex-col mt-10 items-center gap-10">
-        <h1
-          className="
-            text-4xl sm:text-5xl font-bold tracking-wide
-            text-slate-800 dark:text-slate-200
-          "
-        >
-          Tic Tac Toe
-        </h1>
+    <div className="flex flex-col mt-5 gap-8 items-center">
+          <div className='font-bold text-2xl'>Tic Tac Toe</div>
 
-        <div className="font-bold text-l">Current Player: {currentPlayer}</div>
-        
-        <GameBoard
-          board={board}
-          updateBoard={setBoard}
-          currentPlayer={currentPlayer}
-          setCurrentPlayer={setCurrentPlayer}
-          gameState={gameState}
-        />
-        <Setup
-          boardSize={boardSize}
-          setBoardSize={setBoardSize}
-          resetGame={resetGame}
-        />
-      </div>
-      
-    </>
+
+      <div className="font-bold text-l">{currentPlayer}'s turn</div>
+
+      <GameBoard
+        board={board}
+        onCellClick={onCellClick}
+        currentPlayer={currentPlayer}
+        gameState={gameState}
+      />
+      <SetupGame
+        boardSize={boardSize}
+        setBoardSize={setBoardSize}
+        resetGame={resetGame()}
+      />
+    </div>
   );
 };

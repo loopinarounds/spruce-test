@@ -7,14 +7,12 @@ export type SetupGameProps = {
   };
   
 
-
-
 export function SetupGame({
     boardSize,
     setBoardSize,
     resetGame,
   }: SetupGameProps): JSX.Element {
-    const handleButtonClick = () => {
+    const handleClick = () => {
       resetGame();
     };
   
@@ -26,13 +24,11 @@ export function SetupGame({
             Board Size
           </label>
           <input
-            id="board-size"
-            name="boardSize"
+            onChange={(e) => setBoardSize(Number(e.target.value))}
             type="number"
             min={3}
             max={15}
             value={boardSize}
-            required
             className="
               border border-gray-300 rounded-md px-4 py-2
               focus:outline-none focus:ring-2 focus:ring-blue-500
@@ -41,11 +37,11 @@ export function SetupGame({
             "
           />
           <p className="mt-1 text-xs text-red-600">
-            {boardSize < 3 || boardSize > 15 ? "Please enter a number between 3 and 15." : ""}
+            {(boardSize < 3 || boardSize > 15) && "Enter a number between 3 and 15."}
           </p>
         </div>
         <button
-          onClick={handleButtonClick}
+          onClick={handleClick}
           className="w-full rounded bg-blue-600 px-4 py-2 font-semibold text-white hover:bg-blue-700 transition"
         >
           Reset Game

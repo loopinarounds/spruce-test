@@ -40,6 +40,8 @@ if (loading) {
   return <Loading />;
 }
 
+console.log(leaderboardData);
+
   return (
     <div className="w-1/4 bg-gray-100 p-4 border-r border-gray-300">
       <h2 className="text-xl font-bold mb-4">Leaderboard</h2>
@@ -49,7 +51,7 @@ if (loading) {
       <ul>
         {leaderboardData.map((entry, index) => (
           <li key={index} className="flex justify-between mb-2">
-            <span>{entry.name_of_winner}</span>
+            <span>{entry.name}</span>
             <span>{entry.count}</span>
           </li>
         ))}

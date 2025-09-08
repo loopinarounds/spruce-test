@@ -30,7 +30,7 @@ export function useGame() {
       return;
     }
 
-    // Check for a draw
+   
     if (checkDraw(updatedBoard)) {
       setGameState(GameState.Draw);
     }
